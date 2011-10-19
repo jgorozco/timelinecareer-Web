@@ -1,0 +1,20 @@
+application: curri2dot0
+version: 2
+runtime: python
+api_version: 1
+
+handlers:
+- url: /js
+  static_dir: js
+- url: /css
+  static_dir: css
+- url: /img
+  static_dir: img  
+- url: /sections
+  static_dir: sections  
+- url: /show
+  static_dir: client  
+
+
+- url: /.*
+  script: InitServlet.py

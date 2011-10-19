@@ -1,0 +1,321 @@
+<link rel="stylesheet" href="css/proyectstyle.css">
+
+<div class="category_title">
+	<div class="title_centered" id="title_form">
+		Projects
+	</div>
+</div>
+<div class="full_form" id="contenido_form" >	
+
+	
+</div>
+
+<div class="form_button_list">
+	<div class="button_center">
+	<button onclick="saveData();" class="btn_submit">
+		Save data
+	</button>
+	<button onclick="clearData();" class="btn_submit">
+		Clean Data
+	</button>
+	</div>
+</div>
+<script type="text/javascript">
+
+var arrayDatos;
+var ArrayCategs;
+function generateCategoryString(pro)
+{
+	var categ=generateCategory(pro,"no");
+	var subcat=generateCategory(pro,"yes");
+	var nocat="please go to categories and create news categories";
+	if (categ!="")
+	{
+		nocat="";
+	}
+	
+
+	
+	var categoryGen="<div class='datafield'>"+
+						"<div class='content_50' id='withData'>"+
+							"<div class='content_40'>"+
+								"<div class='data_title'>Name:</div>"+
+							"</div>"+
+							"<div class='content_60'>"+
+								"<input class='input_text category' id='Name' type='text' value='"+pro.Name+"' />"+
+							"</div>"+
+						"</div>"+
+						"<div class='content_50' id='withData'>"+
+							"<div class='content_40'>"+
+								"<div class='data_title'>Company:</div>"+
+							"</div>"+
+							"<div class='content_60'>"+
+								"<input class='input_text tooltiped' id='Company' type='text' value='"+pro.Company+"'   tooltipText='If is a personal project,left it blank' />"+
+							"</div>"+
+						"</div>"+
+						"<div class='content_50' id='withData'>"+
+							"<div class='content_40'>"+
+								"<div class='data_title'>Category:</div>"+
+							"</div>"+
+							"<div class='content_60'>"+
+								"<select class='input_text' id='Category'>"+categ+"</select>"+
+								nocat+
+							"</div>"+
+						"</div>"+
+						"<div class='content_50' id='withData'>"+
+							"<div class='content_40'>"+
+								"<div class='data_title'>SubCategory:</div>"+
+							"</div>"+
+							"<div class='content_60'>"+
+								"<select class='input_text' id='SubCategory'>"+subcat+"</select>"+
+							"</div>"+
+						"</div>"+
+						"<div class='content_50' id='withData'>"+
+							"<div class='content_40'>"+
+								"<div class='data_title'>Init Date:</div>"+
+							"</div>"+
+							"<div class='content_60'>"+
+								"<input class='input_text datepicker InitDate' id='InitDate_"+pro.Number+"' type='text' value='"+pro.InitDate+"' />"+
+							"</div>"+
+						"</div>"+
+						"<div class='content_50' id='withData'>"+
+							"<div class='content_40'>"+
+								"<div class='data_title'>End Date:</div>"+
+							"</div>"+
+							"<div class='content_60'>"+
+								"<input class='input_text datepicker EndDate tooltiped' id='EndDate_"+pro.Number+"' type='text' value='"+pro.EndDate+"'  tooltipText='if your are currently working in that, left it blank'/>"+
+							"</div>"+
+						"</div>"+
+						"<div class='content_100' id='withData'>"+
+							"<div class='content_40'>"+
+								"<div class='data_title'>Description:</div>"+
+							"</div>"+
+							"<div class='content_100 center'>"+
+								"<textarea class='input_text' id='Description' name='Description' rows='7' cols='90'  > "+pro.Description+
+								"</textarea>"+	
+							"</div>"+
+						"</div>"+
+						"<div class='content_50' id='withData'>"+
+							"<div class='content_40'>"+
+								"<div class='data_title'>Url:</div>"+
+							"</div>"+
+							"<div class='content_60'>"+
+								"<input class='input_text big' id='Url' type='text' value='"+pro.Url+"' />"+
+							"</div>"+
+						"</div>"+		
+						"<div class='content_50' style='width=10%'>"+						
+							"<button onclick='addProyect(this);' class='btn_submit'>"+
+								"ADD"+
+							"</button>"+
+							"<button onclick='delProyect(this);' class='btn_submit'>"+
+								"DELETE"+
+							"</button>"+
+						"</div>"+	
+						"<div style='clear: both;'></div>"+
+						"<hr>"+		
+							
+					"</div>";
+	return categoryGen;
+}
+
+function generateCategory(pro,sub)
+{
+	var options="";
+	var categ=pro.Category;
+	if (sub=="yes")
+	{
+		categ=pro.SubCategory;
+	}
+	for (i=0;i<ArrayCategs.length;i++)
+	{
+		var sel="";
+		if (categ==ArrayCategs[i].Name)
+		{
+			sel="selected='selected'";
+		}
+		options=options+"<option value='"+ArrayCategs[i].Name+"' "+sel+">"+ArrayCategs[i].Name+"</option>"
+	}
+	
+	return options;
+}
+
+function reloadAllElements()
+{
+	var parent=document.getElementById("contenido_form");
+	var i=0;
+	var elems=new Array();
+	var count=0;
+	
+	for (i=0;i<parent.childElementCount;i++)
+	{
+		
+		var celrow=parent.children[i];
+		var elemento=new Object();
+		for (j=0;j<celrow.childElementCount;j=j+1)
+		{
+			if (celrow.children[j].id=="withData")
+			{
+				var classname=celrow.children[j].children[1].children[0].className;
+				var idDato=celrow.children[j].children[1].children[0].id;
+				var arrClass=classname.split(" ");
+				if (idDato.indexOf(arrClass[2])!=-1)
+				{
+					idDato=arrClass[2];
+				}
+				elemento[idDato]=celrow.children[j].children[1].children[0].value;
+				if (idDato=="Company")
+				{
+					elemento.Profesional="true";
+					if ((elemento[idDato]==null)||(elemento[idDato]=="")||(elemento[idDato].lenght>1))
+					{
+						elemento.Profesional="false";
+					}
+				}
+			}
+		}
+		elemento.Number=i;
+		if(elemento.Name!=""){
+			elems[count]=elemento;
+			count=count+1;
+		}
+	}
+	arrayDatos=elems;
+	var	generado=generateListFromArray();
+	return generado;
+	//recorrer todo el listado y guardar los datos en el array de nuevo
+}
+
+function addProyect(item)
+{
+		var tooltip="<script type=\"text/javascript\">"+
+	"var tooltipObj = new DHTMLgoodies_formTooltip();"+
+"tooltipObj.setTooltipPosition('right');"+
+"tooltipObj.setPageBgColor('#EEEEEE');"+
+"tooltipObj.setTooltipCornerSize(15);"+
+"tooltipObj.initFormFieldTooltip();"+
+"<\/script>";
+	
+	
+	var generado=reloadAllElements();
+	var proyectVacio=new Object();
+	proyectVacio.Name="";
+    proyectVacio.Category="";
+    proyectVacio.SubCategory="";
+    proyectVacio.InitDate="";
+    proyectVacio.EndDate="";
+    proyectVacio.Description="";
+    proyectVacio.Company="";
+    proyectVacio.Profesional="false";
+    proyectVacio.Url="";
+	proyectVacio.Number=arrayDatos.lenght;
+	arrayDatos.push(proyectVacio);
+	generado=generado+generateCategoryString(proyectVacio)+tooltip;
+	
+	document.getElementById("contenido_form").innerHTML=generado;
+	
+}
+
+
+function clearData()
+{
+	alert("borrando...");
+}
+
+
+function saveData()
+{
+	saveMyProject=true;
+	reloadAllElements();
+	xml_http_post("/SetData?type=Proyects","POST",JSON.stringify(arrayDatos),onDataSaved)
+}
+
+function onDataSaved(request)
+{
+//	alert("saved!!["+request.responseText+"]");
+}
+
+function generateListFromArray()
+{
+	var str_generado="";	
+	
+	for (var i=0;i<arrayDatos.length;i++)
+	{
+		str_generado=str_generado+generateCategoryString(arrayDatos[i]);
+	}
+	return str_generado;
+}
+
+function onDataLoaded(request)
+{
+
+	
+	var datos=JSON.parse(request.responseText);
+	arrayDatos=new Array(datos.length)
+	for (i=0;i<datos.length;i++)
+	{
+		arrayDatos[i]=datos[i];
+	}
+	if (datos.length>0)
+	{
+	//	alert("fdsafda");
+		saveMyProject=true;
+	}
+	var proyectVacio=new Object();
+	proyectVacio.Name="";
+    proyectVacio.Category="";
+    proyectVacio.SubCategory="";
+    proyectVacio.InitDate="";
+    proyectVacio.EndDate="";
+    proyectVacio.Description="";
+    proyectVacio.Company="";
+    proyectVacio.Profesional="false";
+    proyectVacio.Url="";
+    proyectVacio.Number=arrayDatos.length;
+	var generado="";
+	
+	generado=generateListFromArray();
+	generado=generado+generateCategoryString(proyectVacio);
+	document.getElementById("contenido_form").innerHTML=generado;	
+	
+	
+}
+
+function loadAllCategories()
+{
+		xml_http_post("/getUserData?type=Categories","GET",0,onCategoriesLoaded);	
+}
+
+function onCategoriesLoaded(request)
+{
+	
+	var datos1=JSON.parse(request.responseText);
+
+	ArrayCategs=new Array(datos1.length)
+	for (i=0;i<datos1.length;i++)
+	{
+		ArrayCategs[i]=datos1[i];
+	}
+	
+	loadMyProyects();
+}
+
+$(function(){
+	$('.tooltiped').live('click', function() {
+    	$(this).datepicker({minDate:_lastDate});
+        $(this).datepicker({showOn:'focus'}).focus();
+    });
+	
+    $('.datepicker').live('click', function() {
+    	$(this).datepicker({minDate:_lastDate});
+        $(this).datepicker({showOn:'focus'}).focus();
+    });
+});
+
+function loadMyProyects()
+{
+	xml_http_post("/getUserData?type=Proyects","GET",0,onDataLoaded);	
+}
+loadAllCategories();
+
+
+</script>

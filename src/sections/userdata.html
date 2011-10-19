@@ -1,0 +1,173 @@
+<link rel="stylesheet" href="css/userstyle.css">
+<div class="category_title">
+<div id="idtitle" class="title_centered">
+	Personal Data
+</div>
+</div>
+<div class="full_form">
+	<div class="content_50" >
+		<div class="datafield">
+			<div class="data_title">Name:</div>
+			<div class="data_content">
+				<input class="input_text" id="Name" type="text" value="" />
+			</div>
+		</div>
+		<div class="datafield">
+			<div class="data_title">Phone:</div>
+			<div class="data_content">
+				<input class="input_text" id="Phone" type="text" value="" />
+			</div>
+		</div>
+		<div class="datafield">
+			<div class="data_title">Address:</div>
+			<div class="data_content">
+				<input class="input_text" id="Address" type="text" value="" />
+			</div>
+		</div>
+		<div class="datafield">
+			<div class="data_title">Poblation:</div>
+			<div class="data_content">
+				<input class="input_text" id="Poblation" type="text" value="" />
+			</div>
+		</div>
+		<div class="datafield">
+			<div class="data_title">Country:</div>
+			<div class="data_content">
+				<input class="input_text" name="Country cont" id="Nationality" type="text" value="" />
+			</div>
+		</div>	
+		<div class="datafield">
+			<div class="data_title">Initial Date:</div>
+			<div class="data_content">
+				<input class="input_text datepicker" id="initialDate" type="text" value="" name="Put here the date when you began to work" />
+			</div>
+		</div>			
+	</div>
+	<div class="content_50" >
+	<div class="datafield">
+		<div class="data_title">Email:</div>
+		<div class="data_content">
+			<input class="input_text" id="Mail" type="text" value="" />
+		</div>
+	</div>		
+	<div class="datafield">
+		<div class="data_title">University:</div>
+		<div class="data_content">
+			<input class="input_text" id="University" type="text" value="" />
+		</div>
+	</div>		
+	<div class="datafield">
+		<div class="data_title">Education level:</div>
+		<div class="data_content">
+			<input class="input_text" id="Studies" type="text" value="" />
+		</div>
+	</div>		
+	<div class="datafield">
+		<div class="data_title">Driver license:</div>
+		<div class="data_content">
+			<input class="input_text" id="DriveLicense" type="text" value="" />
+		</div>
+	</div>			
+	<div class="datafield">
+		<div class="data_title">Photo url:</div>
+		<div class="data_content">
+			<input class="input_text" id="Photo" type="text" value="" />
+		</div>
+	</div>							
+</div>
+<div id="link_see" class="data_title">
+</div>
+</div>
+<div class="form_button_list">
+	<div class="button_center">
+	<button onclick="saveData();" class="btn_submit">
+		Save data
+	</button>
+	<button onclick="clearData();" class="btn_submit">
+		Clean Data
+	</button>
+	</div>
+</div>
+
+<script type="text/javascript">
+function clearData()
+{
+	alert("borrando...");
+}
+
+var UserData;
+function saveData()
+{
+	saveUserData=true;
+	var UserData=new Object();	
+	UserData.Name=document.getElementById('Name').value;
+	UserData.Phone=document.getElementById('Phone').value;
+	UserData.Address=document.getElementById('Address').value;
+	UserData.University=document.getElementById('University').value;	
+	UserData.Studies=document.getElementById('Studies').value;
+	UserData.DriveLicense=document.getElementById('DriveLicense').value;
+	UserData.Poblation=document.getElementById('Poblation').value;
+	UserData.Nationality=document.getElementById('Nationality').value;	
+	UserData.Mail=document.getElementById('Mail').value;
+	UserData.Photo=document.getElementById('Photo').value;
+	UserData.initialDate=document.getElementById('initialDate').value;
+	xml_http_post("/SetData?type=UserData","POST",JSON.stringify(UserData),onDataSaved)
+}
+
+function onDataSaved(request)
+{
+//	alert("saved!!["+request.responseText+"]");
+}
+
+
+function onDataLoaded(request)
+{
+	UserData=JSON.parse(request.responseText);
+	if (UserData.initialDate==null)
+	{
+
+		UserData.initialDate=$.datepicker.formatDate('dd/mm/yy', _lastDate);
+		showModal();
+	}else
+	{
+		saveUserData=true;
+		_lastDate=$.datepicker.parseDate( 'dd/mm/yy', UserData.initialDate );
+	
+
+	}
+	
+	$( ".initialDate" ).datepicker( "option", "minDate", new Date(2008, 1 - 1, 1) );
+	document.getElementById('Name').value=UserData.Name;
+	document.getElementById('Phone').value=UserData.Phone;
+	document.getElementById('Address').value=UserData.Address;
+	document.getElementById('University').value=UserData.University;	
+	document.getElementById('Studies').value=UserData.Studies;
+	document.getElementById('DriveLicense').value=UserData.DriveLicense;
+	document.getElementById('Poblation').value=UserData.Poblation;
+	document.getElementById('Nationality').value=UserData.Nationality;	
+	document.getElementById('Mail').value=UserData.Mail;
+	document.getElementById('Photo').value=UserData.Photo;
+	document.getElementById('initialDate').value=UserData.initialDate;
+	loadMailURL();
+	
+}
+
+
+
+function loadMailURL()
+{
+	//document.getElementById('link_see').innerHTML="visit your profile in this <a href='http://flossome.es/test_curri2dot0/?mail="+UserData.Mail+"'  target='_blank'>link</>";
+	document.getElementById('my_link').href="http://www.timelinecareer.com//show/index.html?mail="+UserData.Mail;
+	
+}
+
+function loadMyUserData()
+{
+	xml_http_post("/getUserData?type=UserData","GET",0,onDataLoaded);
+}
+
+	$(function() {
+		$( ".datepicker" ).datepicker();
+	});
+loadMyUserData();
+</script>

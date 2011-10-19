@@ -1,0 +1,120 @@
+.userdiv {
+	max-width:100px;
+	height:100px;
+  
+  }
+
+.datafield{
+	
+}
+
+.data_title{
+	padding-top:10px;
+	font-size: 17px;
+	float:right;
+	padding-right: 5px;
+	text-align:right;
+	display: block;
+}
+.content_100{
+	display: block;
+	float:left;
+	width: 100%;
+}
+.center{
+text-align: center ;
+}
+
+
+.content_40{
+	display: block;
+	float:left;
+	width: 30%;
+
+}
+.content_60{
+	display: block;
+	float:left;
+	width: 70%;
+}
+
+.big{
+	width: 80%;
+}
+
+.data_content{
+	
+	float:left;
+	display: block;
+	width: 35%;
+}
+
+.category_title
+{
+	position:relative;
+	display: block;
+	width:100%;
+	font-size: 30px;
+	text-align: center;
+	 height: auto;
+	 min-height: 60px;
+
+}
+
+hr
+{
+	border-radius:5px;
+	padding-top:7px;
+	background-color: #F9FAFF;
+	width: 90%;
+}
+.title_centered
+{
+	padding:10px;
+	position: absolute;
+    left: 40%;
+    height: auto;
+}
+.full_form
+{	
+	position:relative;
+	display: block;
+	width:100%;
+	float:left;
+	min-height:200px;
+	max-height:450px;
+	padding: 5px;
+	overflow: auto;
+	padding-bottom: 10px;
+}
+.form_button_list
+{
+	position: relative;
+	display: block;
+	width: 100%;
+	float: left;
+}
+.button_center
+{
+	position: absolute;
+    left: 40%;
+}
+.input_text{
+	padding-bottom: 8px;
+	padding-top: 8px;	
+	margin-bottom: 10px;
+}
+.btn_submit{
+	position: relative;
+	display: block;
+	float: left;
+	padding-bottom: 12px;
+	padding-top: 12px;	
+}
+.category{
+	float:left;
+	width: 70%;
+	z-index: 1;
+}
+/***********************/
+

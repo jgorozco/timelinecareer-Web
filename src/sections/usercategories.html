@@ -1,0 +1,148 @@
+<link rel="stylesheet" href="css/userstyle.css">
+<div class="category_title">
+	<div class="title_centered" id="title_form">
+		Categories
+	</div>
+</div>
+<div class="full_form" id="contenido_form" >	
+</div>
+
+<div class="form_button_list">
+	<div class="button_center">
+	<button onclick="saveData();" class="btn_submit">
+		Save Data
+	</button>
+	<button onclick="clearData();" class="btn_submit">
+		Clear Data
+	</button>
+	</div>
+</div>
+
+<script type="text/javascript">
+
+var arrayDatos;
+
+function generateCategoryString(tag)
+{
+	var categoryGen="<div class='datafield'>"+		
+					"<div class='content_100' id='"+tag.Number+"' >"+
+						"<div class='content_33'  style='width=10%'>"+
+							"<div class='data_title'>Category:"+
+							"</div>"+
+						"</div>"+
+						"<div class='content_33' style='width=15%'>"+
+							"<input class='input_text category' id='category' type='text' value='"+tag.Name+"' />"+
+						"</div>"+
+						"<div class='content_33'  style='width=10%'>"+
+							"<div class='data_title'>Color:"+
+							"</div>"+
+						"</div>"+			
+						"<div class='content_33' style='width=15%'>"+
+							"<input class='input_text category' id='color_cat' type='text' value='"+tag.Color+"' onClick='colorPicker(event);colorPicker.cP.style.zIndex=100;'/>"+
+						"</div>"+
+						"<div class='content_33' style='width=20%'>"+						
+							"<button onclick='addCategory(this);' class='btn_submit'>"+
+								"ADD"+
+							"</button>"+
+						"</div>"+
+					"</div>"+
+				"</div>";
+	return categoryGen;
+}
+
+function reloadAllElements()
+{
+	var parent=document.getElementById("contenido_form");
+	var i=0;
+	var elems=new Array();
+	var count=0;
+	for (i=0;i<parent.childElementCount;i++)
+	{
+		
+		var celrow=parent.children[i].children[0];
+		var elemento=new Object();
+		
+		elemento.Name=celrow.children[1].children[0].value;
+		elemento.Color=celrow.children[3].children[0].value;
+		elemento.Color=elemento.Color.replace("#","");
+		elemento.Number=i;
+		if(elemento.Name!=""){
+			elems[count]=elemento;
+			count=count+1;
+		}
+	}
+	arrayDatos=elems;
+	var	generado=generateListFromArray();
+	return generado;
+	//recorrer todo el listado y guardar los datos en el array de nuevo
+}
+
+function addCategory(item)
+{
+	var generado=reloadAllElements();
+	var tagVacio=new Object();
+	tagVacio.Name="";
+	tagVacio.Number=arrayDatos.lenght;
+	tagVacio.Color="";
+	generado=generado+generateCategoryString(tagVacio);
+	document.getElementById("contenido_form").innerHTML=generado;
+}
+
+
+function clearData()
+{
+	alert("borrando...");
+}
+
+
+function saveData()
+{
+	saveTags=true;
+	reloadAllElements();
+	xml_http_post("/SetData?type=Categories","POST",JSON.stringify(arrayDatos),onDataSaved)
+}
+
+function onDataSaved(request)
+{
+//	alert("saved!!["+request.responseText+"]");
+}
+
+function generateListFromArray()
+{
+	var str_generado="";	
+	for (i=0;i<arrayDatos.length;i++)
+	{
+		str_generado=str_generado+generateCategoryString(arrayDatos[i]);
+	}
+	return str_generado;
+}
+
+function onDataLoaded(request)
+{
+	
+	var datos=JSON.parse(request.responseText);
+	arrayDatos=new Array(datos.length)
+	for (i=0;i<datos.length;i++)
+	{
+		arrayDatos[i]=datos[i];
+	}
+	if (datos.lenght>0)
+	{
+		saveTags=true;
+	}
+	var tagVacio=new Object();
+	tagVacio.Name="";
+	tagVacio.Number=2;
+	tagVacio.Color="";
+	var generado="";
+	generado=generateListFromArray();
+	generado=generado+generateCategoryString(tagVacio);
+	document.getElementById("contenido_form").innerHTML=generado;	
+}
+
+function loadMyCategories()
+{
+	xml_http_post("/getUserData?type=Categories","GET",0,onDataLoaded);	
+}
+loadMyCategories();
+</script>

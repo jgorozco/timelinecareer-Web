@@ -1,0 +1,266 @@
+<html >
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <meta name="author" lang="en" content="[www.timelinecareer.com]; mail@timelinecareer.com: jgorozco@timelinecareer.com" />
+        <meta name="description" content="show your experience in a timeline. Add your CV data and share it in a new way presentation. Edit your personal data, Projects,and experience to show in a different way" />
+        <meta name="keywords" content="cv,timeline,experience,timeline career,career,projects,personal data,linkedin" />
+        <meta name="robots" content="all,follow" />
+        <meta property="og:title" content="Timeline Career" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="http://www.timelinecareer.com" />
+<meta property="og:image" content="http://timelinecareer.com/img/icon_2.png" />
+<meta property="og:site_name" content="Timeline Career" />
+<meta property="fb:admins" content="100001464386764" />	<title>Timeline Career</title>
+   	<link rel="stylesheet" type="text/css" media="all" href="css/screen.css" />     
+   	<link rel="stylesheet" type="text/css" media="all" href="css/ui-lightness/jquery-ui-1.8.16.custom.css" />     
+	<script src="js/jquery-1.6.2.min.js" type="text/javascript"></script>
+	<script src="js/jquery.easing.1.2.js"></script>
+	<script src="js/cP_v0.9/colorPicker.js"></script>
+	<script src="js/jquery-ui-1.8.16.custom.min.js"></script>
+	<script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
+	<link rel="stylesheet" href="css/style.css">
+	
+	<script type="text/javascript">
+var loadedYet=0;
+var saveUserData=false;
+var saveProject=false;
+var saveMyProject=false;
+var saveTags=false;
+var saveTheme=false;
+
+var lang=false;
+//var arr="21/16/2010".split("/");
+var _lastDate=new Date();
+//alert($.datepicker.formatDate('dd/mm/yy', d1));  
+
+function xml_http_post(url, type,data, callback) {
+    var req = false;
+    try {
+        // Firefox, Opera 8.0+, Safari
+        req = new XMLHttpRequest();
+    }
+    catch (e) {
+        // Internet Explorer
+        try {
+            req = new ActiveXObject("Msxml2.XMLHTTP");
+        }
+        catch (e) {
+            try {
+                req = new ActiveXObject("Microsoft.XMLHTTP");
+            }
+            catch (e) {
+                alert("Your browser does not support AJAX!");
+                return false;
+            }
+        }
+    }
+    
+	
+    req.open(type, url, true);
+	req.send(data);
+   
+    req.onreadystatechange = function() {
+        if (req.readyState == 4) {
+            callback(req);
+        }
+    }
+   
+}
+
+function clickUserData()
+{ 
+	document.getElementById("btn_user").className="selected";
+	document.getElementById("btn_categories").className="";
+	document.getElementById("btn_project").className="";
+	document.getElementById("btn_themes").className="";
+	$("#iframeID").load("sections/userdata.html");
+}
+
+function clickProyects()
+{
+	document.getElementById("btn_user").className="";
+	document.getElementById("btn_categories").className="";
+	document.getElementById("btn_project").className="selected";
+	document.getElementById("btn_themes").className="";
+	$("#iframeID").load("sections/userproyects.html");
+}
+function clickCategories()
+{
+	document.getElementById("btn_user").className="";
+	document.getElementById("btn_categories").className="selected";
+	document.getElementById("btn_project").className="";
+	document.getElementById("btn_themes").className="";
+	$("#iframeID").load("sections/usercategories.html");
+}
+function clickThemes()
+{
+		document.getElementById("btn_user").className="";
+	document.getElementById("btn_categories").className="";
+	document.getElementById("btn_project").className="";
+	document.getElementById("btn_themes").className="selected";
+	$("#iframeID").load("sections/userthemes.html");
+}
+
+function onAllDataLoaded(request)
+{
+	var UserData=JSON.parse(request.responseText);
+	document.getElementById("iframeID").innerHTML=request.responseText;
+	//alert(UserData);
+}
+
+function getAll()
+{
+	xml_http_post("/getUserData?type=all","GET",0,onAllDataLoaded)
+}
+
+function getUserData()
+{
+/*	userData=new Object();
+	userData.nombre="pepito";
+	document.getElementById("title").innerHTML="hola "+userData.nombre;*/
+	clickProyects();
+}
+jQuery(function($){
+	$.datepicker.regional['es'] = {
+		closeText: 'Cerrar',
+		prevText: '&#x3c;Ant',
+		nextText: 'Sig&#x3e;',
+		currentText: 'Hoy',
+		monthNames: ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
+		'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'],
+		monthNamesShort: ['Ene','Feb','Mar','Abr','May','Jun',
+		'Jul','Ago','Sep','Oct','Nov','Dic'],
+		dayNames: ['Domingo','Lunes','Martes','Mi&eacute;rcoles','Jueves','Viernes','S&aacute;bado'],
+		dayNamesShort: ['Dom','Lun','Mar','Mi&eacute;','Juv','Vie','S&aacute;b'],
+		dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','S&aacute;'],
+		weekHeader: 'Sm',
+		dateFormat: 'dd/mm/yy',
+		firstDay: 1,
+		isRTL: false,
+		showMonthAfterYear: false,
+		yearSuffix: ''};
+	$.datepicker.setDefaults($.datepicker.regional['es']);
+});
+
+function showModal() {
+	var mask=document.getElementById("modal_mask");
+	var content=document.getElementById("modal_content");
+	var maskHeight = document.documentElement.clientHeight;
+    var maskWidth = document.documentElement.clientWidth;
+    mask.style.width=maskWidth;
+    mask.style.height=maskHeight;
+      mask.style.display = 'block';  
+      content.style.display = 'block'; 
+      content.style.top=(maskHeight-content.style.height)/4;
+      content.style.left=(maskWidth-content.style.width)/4;
+      loadWizard();
+    }     
+     
+function hideModal()
+{	var mask=document.getElementById("modal_mask");
+	var content=document.getElementById("modal_content");
+	  mask.style.display = 'none';  
+	  content.style.display = 'none'; 
+}
+var posi=0;
+function loadWizard()
+{
+
+		$("#modal_iframe").load("sections/wizard_1.html");
+}
+
+showModal();
+</script>
+        <title>Timeline Career</title>
+    </head>
+    <body onload="clickUserData();">
+<div id="modal_mask" class="modal_mask">
+		
+	</div>
+	<div id="modal_content" class="modal_content" >
+			<div class="close_btn" onclick="hideModal();">close</div>
+			<div id="modal_iframe" class="modal_iframe" onclick="loadWizard();">
+				
+			</div>
+		</div>
+    
+    
+    	<div class="content">	
+			 <div id="iframeID" class="iframe"></div>
+		</div>
+    	<div style='clear: both;padding-top:90px;'></div>
+    	
+		<!-- AddThis Button BEGIN -->
+<div class="center ">
+  <div class="margin:2px">
+		<div id="fb-root" ></div>
+			<script>(function(d, s, id) {
+			  var js, fjs = d.getElementsByTagName(s)[0];
+			  if (d.getElementById(id)) {return;}
+			  js = d.createElement(s); js.id = id;
+			  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
+			  fjs.parentNode.insertBefore(js, fjs);
+			}(document, 'script', 'facebook-jssdk'));</script>
+		<div  class="fb-like" data-href="http://timelinecareer.com" 
+		data-send="true" data-width="400" data-show-faces="false">
+		</div>
+	</div>
+	<script src="http://platform.linkedin.com/in.js" type="text/javascript"></script>
+	<script type="IN/Share" data-counter="right"></script>	
+	<g:plusone ></g:plusone>
+	<a href="https://twitter.com/share" 
+	   class="twitter-share-button" data-count="horizontal" 
+	   data-lang="es">Tweet</a>
+	<script type="text/javascript" src="//platform.twitter.com/widgets.js">
+	</script>
+	
+</div>
+<script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=ra-4e8c928c01f6dc8c"></script>
+<!-- AddThis Button END -->
+		
+
+        <hr class="noscreen" />
+
+        <div id="header">
+            <div class="wrap">
+                
+                <!-- Logo start -->
+                  <a id="logo" href="./" title="timelineCareer">Timeline<strong>Career</strong></a>
+                <!-- Logo end -->
+        
+                <hr class="noscreen noprint" />
+        
+                <!-- Navigation start -->
+                <strong class="noscreen noprint">Navigation:</strong>
+                <ul id="nav">
+				<li><a class="mini_btn" style="font-size:13px; padding: 0 10px;" href="#" id="btn_user" onclick="clickUserData();" >    User data</a></li>
+				<li><a class="mini_btn" style="font-size:13px;padding: 0 10px;"  href="#" id="btn_categories" onclick="clickCategories();">Categories</a></li>
+				<li><a class="mini_btn" style="font-size:13px;padding: 0 10px;"  href="#" id="btn_project" onclick="clickProyects();">Projects</a></li>
+				<li><a class="mini_btn" style="font-size:13px;padding: 0 10px;"  href="#" id="btn_themes" onclick="clickThemes();">Themes</a></li>
+				<li><a class="mini_btn" style="font-size:13px;padding: 0 10px;" href="#" id="my_link" target='_blank'>Visit your CV</a></li>
+				<li><a class="mini_btn" style="font-size:13px;padding: 0 10px;" href="http://www.timelinecareer.com/show/index.html?mail=josevallekas@gmail.com" target='_blank'>Visit CV example</a></li>
+				<li><a class="mini_btn" style="font-size:13px;padding: 0 10px;" href="#" onclick="showModal();">Tutorial</a></li>
+                </ul>
+                <!-- Navigation end -->
+            </div>
+        </div>
+        
+        <hr class="noscreen" />
+  
+        <!-- Footer start -->
+        <div style='clear: both;padding-top:40px;'></div>
+        <p class="footer">
+            <span class="floatLeft"> 2011 - <a href="mailto:mail@timelinecareer.com">mail@timelinecareer.com</a></span>
+            
+              <!-- Don't delete the links! -->
+                <span id="dont-delete-this" class="floatRight noprint">Our tip: <a href="http://www.grily-grilovanie.sk/grily-weber/" 
+title="Grily Weber">Grily Weber</a> | Created by <a href="http://www.tempixo.com" class="tempixo">Tempixo.com<span></span></a></span>
+              <!-- Thank you :) -->
+        
+        </p>
+
+	
+        <!-- Footer end -->
+
+    </body>
+</html>
